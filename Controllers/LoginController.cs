@@ -28,14 +28,14 @@ namespace LoginApi.Controllers {
                 return new NotFoundObjectResult(new ErrorDTO((int)HttpStatusCode.NotFound, string.Format("No user with username = {0}", credential.UserName)));
             }
 
-            // Find User with credential
-            var foundUser = new User(credential);
-
             // Parse user object to JSON
             var userJson = JsonSerializer.Serialize(credential);
 
             // Write user data to file in JSON format
             await FileUtils.WriteFile(userJson, "user.txt", _logger);
+
+            // Find User with credential
+            var foundUser = new User(credential);
 
             return CreatedAtAction(
                 nameof(Post),

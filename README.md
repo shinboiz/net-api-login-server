@@ -6,6 +6,12 @@ A ASP.NET sample project with login api.
 
 This project is a sample code for a Login Web API.
 
+The API will do following tasks:
+1. Receive credential data in JSON format in the body of request.
+2. Store credential to [user.txt] file. You'll see the file path in console log.
+3. Mockup user object with that credential.
+4. Return user object (with asscociated data)
+
 For help getting started with .Net Web Api, view
 [online tutorial](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-5.0&tabs=visual-studio).
 
