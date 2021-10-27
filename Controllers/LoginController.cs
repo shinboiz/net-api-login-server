@@ -26,11 +26,7 @@ namespace LoginApi.Controllers {
 
             // Mock an failure
             if (credential.UserName.ToLower() == "failure") {
-                var resp = new HttpResponseMessage(HttpStatusCode.NotFound) {
-                    Content = new StringContent(string.Format("No user with username = {0}", credential.UserName)),
-                    ReasonPhrase = "User Not Found"
-                };
-                return new NotFoundObjectResult(resp);
+                return new NotFoundObjectResult(new { errorCode = HttpStatusCode.NotFound, message = string.Format("No user with username = {0}", credential.UserName) });
             }
 
             // Find User with credential
