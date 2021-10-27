@@ -23,7 +23,7 @@ If you already have your environment set-up, please ignore this. Otherwise pleas
 
 ## How to Run
 1. Open source code in Visual Studio Code
-2. Start Debugging (F5)
+2. Run -> Start Debugging (F5)
 
 ## Working APIs
 [POST] https://localhost:5001/Login
