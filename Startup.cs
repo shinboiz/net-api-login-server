@@ -11,6 +11,7 @@ namespace LoginApi
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -21,7 +22,18 @@ namespace LoginApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            // Add Cors Policy
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    name: MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                    });
+            });
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -46,6 +58,9 @@ namespace LoginApi
 
             app.UseRouting();
 
+            // Enable CORS to avoid web app XMLHTTPRequest issue / Cors issue
+            app.UseCors(MyAllowSpecificOrigins);
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -54,7 +69,8 @@ namespace LoginApi
             });
 
             // Redirect welcome page to Swagger
-            app.Run(context => {
+            app.Run(context =>
+            {
                 context.Response.Redirect("swagger/");
                 return Task.CompletedTask;
             });
