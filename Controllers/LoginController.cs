@@ -2,10 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using LoginApi.Models;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using System;
 using System.Threading.Tasks;
 using System.Net;
-using System.Net.Http;
+using LoginApi.Utils;
 
 namespace LoginApi.Controllers {
     [ApiController]
@@ -26,7 +25,7 @@ namespace LoginApi.Controllers {
 
             // Mock an failure
             if (credential.UserName.ToLower() == "failure") {
-                return new NotFoundObjectResult(new { errorCode = HttpStatusCode.NotFound, message = string.Format("No user with username = {0}", credential.UserName) });
+                return new NotFoundObjectResult(new ErrorDTO((int)HttpStatusCode.NotFound, string.Format("No user with username = {0}", credential.UserName)));
             }
 
             // Find User with credential
@@ -36,27 +35,13 @@ namespace LoginApi.Controllers {
             var userJson = JsonSerializer.Serialize(credential);
 
             // Write user data to file in JSON format
-            await WriteFile(userJson, "user.txt");
+            await FileUtils.WriteFile(userJson, "user.txt", _logger);
 
             return CreatedAtAction(
                 nameof(Post),
                 new { id = foundUser.UserId },
                 new UserDTO(foundUser)
             );
-        }
-
-        private async Task WriteFile(string content, string fileName) {
-
-            // Set a variable to the Documents path.
-            string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-    
-            // TODO verify directory exists, Name is not null, Path is not null, Body is not null
-            string fullPath = System.IO.Path.Combine(docPath, fileName);
-
-            _logger.LogInformation(string.Format("Writing data to file = {0}", fullPath));
-
-            // Simplest way to write to file
-            await System.IO.File.WriteAllTextAsync(fullPath, content);
         }
     }
 }

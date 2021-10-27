@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using LoginApi.Models;
 
 namespace LoginApi.Helpers
 {
@@ -43,7 +44,11 @@ namespace LoginApi.Helpers
                         break;
                 }
 
-                var result = JsonSerializer.Serialize(new { errorCode = response.StatusCode, message = error?.Message });
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                };
+                var result = JsonSerializer.Serialize(new ErrorDTO(response.StatusCode, error?.Message), options);
                 await response.WriteAsync(result);
             }
         }
