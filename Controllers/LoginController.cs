@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System;
 using System.Threading.Tasks;
+using System.Net;
+using System.Net.Http;
 
 namespace LoginApi.Controllers {
     [ApiController]
@@ -21,6 +23,15 @@ namespace LoginApi.Controllers {
         [HttpPost]
         public async Task<ActionResult<UserDTO>> Post(LoginCredential credential) {
             _logger.LogInformation("Recieving login request");
+
+            // Mock an failure
+            if (credential.UserName.ToLower() == "failure") {
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound) {
+                    Content = new StringContent(string.Format("No user with username = {0}", credential.UserName)),
+                    ReasonPhrase = "User Not Found"
+                };
+                return new NotFoundObjectResult(resp);
+            }
 
             // Find User with credential
             var foundUser = new User(credential);
