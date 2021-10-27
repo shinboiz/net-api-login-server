@@ -54,6 +54,12 @@ namespace LoginApi
             {
                 endpoints.MapControllers();
             });
+
+            // Redirect welcome page to Swagger
+            app.Run(context => {
+                context.Response.Redirect("swagger/");
+                return Task.CompletedTask;
+            });
         }
     }
 }
